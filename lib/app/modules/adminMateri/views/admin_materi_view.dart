@@ -33,9 +33,8 @@ class AdminMateriView extends GetView<AdminMateriController> {
                   const SizedBox(height: 15),
                   ElevatedButton(
                     onPressed: () {
-                      Get.toNamed(Routes.VIDEO, arguments: {
-                        "idVideo": "1",
-                      });
+                      Get.toNamed(Routes.VIDEO,
+                          arguments: {"idVideo": "1", "user": false});
                     },
                     style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(UI.object)),
@@ -47,9 +46,8 @@ class AdminMateriView extends GetView<AdminMateriController> {
                   const SizedBox(height: 5),
                   ElevatedButton(
                     onPressed: () {
-                      Get.toNamed(Routes.VIDEO, arguments: {
-                        "idVideo": "2",
-                      });
+                      Get.toNamed(Routes.VIDEO,
+                          arguments: {"idVideo": "2", "user": false});
                     },
                     style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(UI.object)),

@@ -18,8 +18,8 @@ class FinishController extends GetxController {
     [0.0, 0.0],
   ].obs;
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getData() {
-    var soal = firestore.collection('soals');
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getData(id ) {
+    var soal = firestore.collection('soals').doc(id);
     return soal.snapshots();
   }
 

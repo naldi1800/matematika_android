@@ -56,53 +56,6 @@ class EditSoalView extends GetView<EditSoalController> {
                           ),
                           const SizedBox(height: 5),
                           UI.perInput(controller.cQ2),
-                          const SizedBox(height: 10),
-                          const Text(
-                            "Persamaan 2",
-                            style: TextStyle(
-                              color: UI.action,
-                              fontSize: 15,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          UI.perInput(controller.cQ2),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: 150,
-                            child: UI.textInput(controller.cCerita,
-                                label: "cerita", mLine: null, expand: true),
-                          ),
-                          const SizedBox(height: 10),
-                          SizedBox(
-                            height: 150,
-                            child: UI.textInput(controller.cPenjelasan,
-                                label: "penjelasan", mLine: null, expand: true),
-                          ),
-                          const SizedBox(height: 10),
-                          UI.textInput(
-                            controller.cOptA,
-                            label: "Opsi A",
-                          ),
-                          const SizedBox(height: 10),
-                          UI.textInput(
-                            controller.cOptB,
-                            label: "Opsi B",
-                          ),
-                          const SizedBox(height: 10),
-                          UI.textInput(
-                            controller.cOptC,
-                            label: "Opsi C",
-                          ),
-                          const SizedBox(height: 10),
-                          UI.textInput(
-                            controller.cOptD,
-                            label: "Opsi D",
-                          ),
-                          const SizedBox(height: 10),
-                          UI.textInput(
-                            controller.cAnswer,
-                            label: "Answer",
-                          ),
                           const SizedBox(height: 15),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -125,7 +78,7 @@ class EditSoalView extends GetView<EditSoalController> {
                               const SizedBox(width: 5),
                               ElevatedButton(
                                 onPressed: () async {
-                                  controller.save(id);
+                                  controller.saved(id);
                                 },
                                 style: const ButtonStyle(
                                   backgroundColor:
@@ -143,7 +96,7 @@ class EditSoalView extends GetView<EditSoalController> {
                         ],
                       );
                     } else {
-                      return Center(
+                      return const Center(
                         child: CircularProgressIndicator(),
                       );
                     }

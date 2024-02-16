@@ -22,8 +22,11 @@ class Menu {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               GestureDetector(
-                onTap: () =>
-                    Get.offAndToNamed(Routes.HOME, arguments: Get.arguments),
+                onTap: () {
+                  if (Get.routing.current != Routes.HOME) {
+                    Get.offAndToNamed(Routes.HOME, arguments: Get.arguments);
+                  }
+                },
                 child: const Column(
                   children: [
                     Icon(
@@ -36,7 +39,10 @@ class Menu {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.offAndToNamed(Routes.MATERI, arguments: Get.arguments);
+                  // print("Root: ${Get.routing.current}");
+                  if (Get.routing.current != Routes.MATERI) {
+                    Get.offAndToNamed(Routes.MATERI, arguments: Get.arguments);
+                  }
                 },
                 child: const Column(
                   children: [
@@ -50,7 +56,9 @@ class Menu {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.offAndToNamed(Routes.PROFILE, arguments: Get.arguments);
+                  if (Get.routing.current != Routes.PROFILE) {
+                    Get.offAndToNamed(Routes.PROFILE, arguments: Get.arguments);
+                  }
                 },
                 child: const Column(
                   children: [
@@ -86,7 +94,11 @@ class Menu {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               GestureDetector(
-                onTap: () => Get.offAndToNamed(Routes.ADMIN_HOME),
+                onTap: () {
+                  if (Get.routing.current != Routes.ADMIN_HOME) {
+                    Get.offAndToNamed(Routes.ADMIN_HOME);
+                  }
+                },
                 child: const Column(
                   children: [
                     Icon(
@@ -99,7 +111,9 @@ class Menu {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.offAndToNamed(Routes.ADMIN_SOAL);
+                  if (Get.routing.current != Routes.ADD_SOAL) {
+                    Get.offAndToNamed(Routes.ADD_SOAL);
+                  }
                 },
                 child: const Column(
                   children: [
@@ -113,7 +127,9 @@ class Menu {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.offAndToNamed(Routes.ADMIN_MATERI);
+                  if (Get.routing.current != Routes.ADMIN_MATERI) {
+                    Get.offAndToNamed(Routes.ADMIN_MATERI);
+                  }
                 },
                 child: const Column(
                   children: [
@@ -127,7 +143,9 @@ class Menu {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.offAndToNamed(Routes.USER);
+                  if (Get.routing.current != Routes.USER) {
+                    Get.offAndToNamed(Routes.USER);
+                  }
 
                   // AuthController auth = Get.find<AuthController>();
                   // auth.logout();

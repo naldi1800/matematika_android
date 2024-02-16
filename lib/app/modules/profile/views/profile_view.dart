@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:matematika/app/controllers/auth_controller.dart';
-import 'package:matematika/app/routes/app_pages.dart';
 import 'package:matematika/app/util/menu.dart';
 import 'package:matematika/app/util/ui.dart';
 
@@ -48,93 +47,81 @@ class ProfileView extends GetView<ProfileController> {
                               if (snapshot.data != null) {
                                 Map<String, dynamic> datas = snapshot.data!
                                     .data() as Map<String, dynamic>;
-                                print(datas);
+                                // print(datas);
+
                                 controller.isTest.value =
                                     datas['isTest'] as bool;
+
+                                controller.setData();
                                 // return const Center(
                                 //     child: CircularProgressIndicator());
                                 return Obx(
-                                  () => Column(
-                                    children: [
-                                      Container(
-                                        width: double.infinity,
-                                        height: 45,
-                                        margin: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 20,
-                                          top: 2.5,
-                                          bottom: 2.5,
-                                        ),
-                                        child: ListTile(
-                                          title: Text("Name: ${datas['name']}"),
-                                          textColor: UI.action,
-                                        ),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        height: 45,
-                                        margin: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 20,
-                                          top: 2.5,
-                                          bottom: 2.5,
-                                        ),
-                                        child: ListTile(
-                                          title:
-                                              Text("Email: ${datas['email']}"),
-                                          textColor: UI.action,
-                                        ),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        height: 45,
-                                        margin: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 20,
-                                          top: 2.5,
-                                          bottom: 2.5,
-                                        ),
-                                        child: ListTile(
-                                          title:
-                                              Text("Skor: ${datas['value']}"),
-                                          textColor: UI.action,
-                                        ),
-                                      ),
-                                      Container(
-                                        width: double.infinity,
-                                        height: 45,
-                                        margin: const EdgeInsets.only(
-                                          left: 20,
-                                          right: 20,
-                                          top: 2.5,
-                                          bottom: 2.5,
-                                        ),
-                                        child: ListTile(
-                                          title: Text(
-                                              "Ujian: anda ${(datas['isTest']) ? 'sudah ujian' : 'belum ujian'}"),
-                                          textColor: UI.action,
-                                        ),
-                                      ),
-                                      if (controller.isTest.value)
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Get.toNamed(Routes.FINISH,
-                                                arguments: datas['answer']);
-                                          },
-                                          style: const ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStatePropertyAll(
-                                                    UI.object),
+                                  () => Visibility(
+                                    visible: controller.onLoad.value,
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: double.infinity,
+                                          height: 45,
+                                          margin: const EdgeInsets.only(
+                                            left: 20,
+                                            right: 20,
+                                            top: 2.5,
+                                            bottom: 2.5,
                                           ),
-                                          child: const Text(
-                                            "Lihat Penjelasan",
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              color: UI.action,
-                                            ),
+                                          child: ListTile(
+                                            title:
+                                                Text("Name: ${datas['name']}"),
+                                            textColor: UI.action,
                                           ),
                                         ),
-                                    ],
+                                        Container(
+                                          width: double.infinity,
+                                          height: 45,
+                                          margin: const EdgeInsets.only(
+                                            left: 20,
+                                            right: 20,
+                                            top: 2.5,
+                                            bottom: 2.5,
+                                          ),
+                                          child: ListTile(
+                                            title: Text(
+                                                "Email: ${datas['email']}"),
+                                            textColor: UI.action,
+                                          ),
+                                        ),
+                                        Container(
+                                          width: double.infinity,
+                                          height: 45,
+                                          margin: const EdgeInsets.only(
+                                            left: 20,
+                                            right: 20,
+                                            top: 2.5,
+                                            bottom: 2.5,
+                                          ),
+                                          child: ListTile(
+                                            title: Text(
+                                                "Skor: ${((controller.skor).isNaN) ? "Belum Ujian" : controller.skor}"),
+                                            textColor: UI.action,
+                                          ),
+                                        ),
+                                        // Container(
+                                        //   width: double.infinity,
+                                        //   height: 45,
+                                        //   margin: const EdgeInsets.only(
+                                        //     left: 20,
+                                        //     right: 20,
+                                        //     top: 2.5,
+                                        //     bottom: 2.5,
+                                        //   ),
+                                        //   child: ListTile(
+                                        //     title: Text(
+                                        //         "Ujian: anda ${(datas['isTest']) ? 'sudah ujian' : 'belum ujian'}"),
+                                        //     textColor: UI.action,
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
                                   ),
                                 );
                               } else {

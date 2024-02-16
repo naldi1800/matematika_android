@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart';
 
 import 'package:get/get.dart';
+import 'package:matematika/app/routes/app_pages.dart';
 import 'package:matematika/app/util/ui.dart';
 
 import '../controllers/video_controller.dart';
@@ -18,14 +19,14 @@ class VideoView extends GetView<VideoController> {
           ),
           iconTheme: IconThemeData(color: UI.action),
           backgroundColor: UI.foreground,
-          // actions: [
-          //   IconButton(
-          //       onPressed: () => Get.back(),
-          //       icon: const Icon(
-          //         Icons.arrow_back,
-          //         color: UI.action,
-          //       ))
-          // ],
+          leading: Get.arguments['user']
+              ? IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    Get.offAndToNamed(Routes.MATERI, arguments: Get.arguments['id']);
+                  },
+                )
+              : null,
         ),
         backgroundColor: UI.backgroud,
         body: Column(

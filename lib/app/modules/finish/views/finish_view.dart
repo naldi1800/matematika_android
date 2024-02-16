@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:matematika/app/routes/app_pages.dart';
 import 'package:matematika/app/util/ui.dart';
 
 import '../controllers/finish_controller.dart';
@@ -18,27 +19,29 @@ class FinishView extends GetView<FinishController> {
           'Penjelasan',
           style: TextStyle(color: UI.action),
         ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: UI.action,
+          ),
+          onPressed: () {
+            Get.offAndToNamed(Routes.MATERI, arguments: Get.arguments['id_user']);
+          },
+        ),
         centerTitle: true,
         backgroundColor: UI.foreground,
       ),
       backgroundColor: UI.backgroud,
       body: StreamBuilder(
-          stream: controller.getData(),
+          stream: controller.getData(Get.arguments['id_soal']),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
-              var datas = snapshot.data!.docs;
+              var datas = snapshot.data!;
               // print(datas.length);
               return Obx(() {
-                if (controller.currentQuiz.value >= datas.length)
-                  controller.currentQuiz.value = datas.length - 1;
-                // print("number ${controller.currentQuiz.value}");
-                // print("Number ele3 ${controller.currentQuiz.value}");
-                var d = datas[controller.currentQuiz.value].data();
+                var d = datas.data();
 
-                controller.isLastQuiz.value =
-                    datas.length - 1 == controller.currentQuiz.value;
-
-                controller.change(d['q1'], d['q2']);
+                controller.change(d!['q1'], d['q2']);
                 var per1 =
                     "${d['q1'][0]}x ${d['q1'][3]} ${d['q1'][1]}y = ${d['q1'][2]}";
                 var per2 =
@@ -64,56 +67,13 @@ class FinishView extends GetView<FinishController> {
                   child: Column(
                     children: [
                       const SizedBox(height: 5),
-                      SizedBox(
-                        height: 50,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            // print(
-                            //     "${d['answer']} = ${Get.arguments[controller.currentQuiz.value].toString().toLowerCase()}");
-                            return Container(
-                              width: 50,
-                              margin: const EdgeInsets.all(7),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  controller.currentQuiz.value = index;
-                                  controller.changeNumber.value = true;
-                                  print(
-                                      "Number ele ${controller.currentQuiz.value}");
-                                },
-                                style: const ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStatePropertyAll(UI.foreground
-                                          // (d['answer'] ==
-                                          //         Get.arguments[controller
-                                          //                 .currentQuiz.value]
-                                          //             .toString()
-                                          //             .toLowerCase())
-                                          //     ? Colors.greenAccent
-                                          //     : Colors.redAccent,
-                                          ),
-                                ),
-                                child: Text(
-                                  "${index + 1}",
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: UI.action,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          itemCount: datas.length,
-                        ),
-                      ),
                       const SizedBox(height: 5),
                       Container(
                         width: double.infinity,
                         height: 100,
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         child: Text(
-                          "${controller.currentQuiz + 1}. Jika $per1 dan $per2 maka x dan y adalah ?",
+                          "Jika $per1 dan $per2 maka x dan y adalah ?",
                           style: const TextStyle(
                             color: UI.action,
                             fontSize: 20,
@@ -126,15 +86,11 @@ class FinishView extends GetView<FinishController> {
                         height: 100,
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         child: Text(
-                          "Jawaban benar adalah (${d['answer']}. ${d[d['answer'].toString().toLowerCase()]}, jawaban anda ${Get.arguments[controller.currentQuiz.value - 1]})",
-                          style:  TextStyle(
-                            color:
-                                (Get.arguments[controller.currentQuiz.value - 1]
-                                            .toString()
-                                            .toLowerCase() ==
-                                        d['answer'])
-                                    ? UI.action
-                                    : Colors.red,
+                          "Jawaban benar adalah (${d['answer']}. ${d[d['answer'].toString().toLowerCase()]}, jawaban anda ${Get.arguments["answer"]})",
+                          style: TextStyle(
+                            color: (Get.arguments["answer"] == d['answer'])
+                                ? UI.action
+                                : Colors.red,
                             fontSize: 20,
                           ),
                           overflow: TextOverflow.clip,
@@ -145,9 +101,18 @@ class FinishView extends GetView<FinishController> {
                         // height: 500,
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         child: HtmlWidget(
-                          "${d['penj']}",
+                          "${d['penj']}<br>",
                           textStyle:
                               const TextStyle(color: UI.action, fontSize: 15),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        // height: 500,
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        child: const Text(
+                          "Metode Grafik:",
+                          style: TextStyle(color: UI.action, fontSize: 15),
                         ),
                       ),
                       Container(

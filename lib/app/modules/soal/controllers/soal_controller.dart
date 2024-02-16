@@ -6,8 +6,8 @@ class SoalController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   var currentQuiz = 0.obs;
   var isLastQuiz = false.obs;
-  var answer = [].obs;
-  var tf = [].obs;
+  var answer = "".obs;
+  var tf = "".obs;
   var selected = "".obs;
   var isFinish = false.obs;
   var isWhiteboard = false.obs;
@@ -16,34 +16,94 @@ class SoalController extends GetxController {
   RxList<WhiteBoardController> papan = RxList<WhiteBoardController>();
   // var papan = [].obs;
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getData() {
-    var soal = firestore.collection('soals');
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getData(id) {
+    var soal = firestore.collection('soals').doc(id);
     return soal.snapshots();
   }
 
   void setSelected(String s) {
     selected.value = s;
-    answer[currentQuiz.value] = s;
+    answer.value = s;
   }
 
-  void saveAnswer(id) async {
-    var users = firestore.collection('users').doc(id);
-    var b = 0, s = 0;
-    for (int i = 0; i < answer.length; i++) {
-      if (tf[i]) {
-        b += 1;
-      } else {
-        s += 1;
+  Future<void> saveAnswer(bool isTrue) async {
+  var answersCollection = firestore
+      .collection('users')
+      .doc(Get.arguments['id_user'])
+      .collection('answers');
+
+  try {
+    var querySnapshot = await answersCollection.get();
+
+    for (var doc in querySnapshot.docs) {
+      print(doc);
+      if (doc['idSoal'] == Get.arguments['id_soal']) {
+        await answersCollection.doc(doc.id).update({
+          "numberofanswers": (doc['numberofanswers'] + 1),
+          "isTrue": isTrue,
+          "answer": answer.value,
+        });
+        return; // Break out of the loop after updating
       }
     }
-    var presentasi = (b / (b + s)) * 100;
-    Map<Object, Object> u = {
-      "answer": FieldValue.arrayUnion(answer),
-      "isTest": true,
-      "value": presentasi,
-    };
-    users.update(u);
+
+    // If the loop completes without finding a matching document
+    await answersCollection.add({
+      "idSoal": Get.arguments['id_soal'],
+      "numberofanswers": 1,
+      "isTrue": isTrue,
+      "answer": answer.value,
+    });
+  } catch (e) {
+    print('Error saving answer: $e');
+    // Handle the error accordingly
   }
+}
+
+
+  // void saveAnswer(isTrue) async {
+  //   firestore
+  //       .collection('users')
+  //       .doc(Get.arguments['id_user'])
+  //       .collection('answers')
+  //       .get()
+  //       .then((value) {
+  //     var x = false;
+  //     value.docs.forEach(
+  //       (doc) {
+  //         print(doc);
+  //         if (doc['idSoal'] == Get.arguments['id_soal']) {
+  //           // print("ID: ${doc['idSoal']}");
+  //           firestore
+  //               .collection('users')
+  //               .doc(Get.arguments['id_user'])
+  //               .collection('answers')
+  //               .doc(doc.id)
+  //               .update({
+  //             "numberofanswers": (doc['numberofanswers'] + 1),
+  //             "isTrue": isTrue,
+  //             "answer": answer.value,
+  //           });
+  //           // print("UY $uy");
+  //           x = true;
+  //         }
+  //       },
+  //     );
+  //     // print(x);
+  //     if (!x) {
+  //       firestore
+  //           .collection('users')
+  //           .doc(Get.arguments['id_user'])
+  //           .collection('answers')
+  //           .add({
+  //         "idSoal": Get.arguments['id_soal'],
+  //         "numberofanswers": 1,
+  //         "isTrue": isTrue,
+  //         "answer": answer.value,
+  //       });
+  //     }
+  //   });
+  // }
 
   //   @override
   // void onInit() {
