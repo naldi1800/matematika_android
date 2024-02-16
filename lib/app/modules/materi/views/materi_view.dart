@@ -198,8 +198,9 @@ class MateriView extends GetView<MateriController> {
                                                   );
                                                 }
                                               } else {
-                                                if (!controller.userLevel[
-                                                    datas[index].id]) {
+                                                if (!controller.userLevel
+                                                    .containsKey(
+                                                        datas[index].id)) {
                                                   Get.offAndToNamed(
                                                     Routes.SOAL,
                                                     arguments: {
@@ -209,17 +210,31 @@ class MateriView extends GetView<MateriController> {
                                                     },
                                                   );
                                                 } else {
-                                                  Get.offAndToNamed(
-                                                    Routes.FINISH,
-                                                    arguments: {
-                                                      "id_user": Get.arguments,
-                                                      "id_soal":
-                                                          datas[index].id,
-                                                      "answer": controller
-                                                              .userSelected[
-                                                          datas[index].id],
-                                                    },
-                                                  );
+                                                  if (!controller.userLevel[
+                                                      datas[index].id]) {
+                                                    Get.offAndToNamed(
+                                                      Routes.SOAL,
+                                                      arguments: {
+                                                        "id_user":
+                                                            Get.arguments,
+                                                        "id_soal":
+                                                            datas[index].id,
+                                                      },
+                                                    );
+                                                  } else {
+                                                    Get.offAndToNamed(
+                                                      Routes.FINISH,
+                                                      arguments: {
+                                                        "id_user":
+                                                            Get.arguments,
+                                                        "id_soal":
+                                                            datas[index].id,
+                                                        "answer": controller
+                                                                .userSelected[
+                                                            datas[index].id],
+                                                      },
+                                                    );
+                                                  }
                                                 }
                                               }
                                             } else {

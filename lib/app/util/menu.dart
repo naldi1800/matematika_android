@@ -111,8 +111,8 @@ class Menu {
               ),
               GestureDetector(
                 onTap: () {
-                  if (Get.routing.current != Routes.ADD_SOAL) {
-                    Get.offAndToNamed(Routes.ADD_SOAL);
+                  if (Get.routing.current != Routes.ADMIN_SOAL) {
+                    Get.offAndToNamed(Routes.ADMIN_SOAL);
                   }
                 },
                 child: const Column(
