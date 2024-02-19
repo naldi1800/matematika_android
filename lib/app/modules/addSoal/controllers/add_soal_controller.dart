@@ -116,7 +116,7 @@ class AddSoalController extends GetxController {
   //   return soal.add(data);
   // }
 
-  Future saved() {
+  Future saved() async {
     var q1 = [
       int.parse(cQ1[0].text),
       int.parse(cQ1[1].text),
@@ -147,6 +147,19 @@ class AddSoalController extends GetxController {
     };
     clear();
     Get.offAndToNamed(Routes.ADMIN_SOAL);
+    var u = await firestore.collection("users").get();
+    for (var usr in u.docs) {
+      var usr_id = usr.id;
+      var usr_answer = await firestore
+          .collection("users")
+          .doc(usr_id)
+          .collection("answers")
+          .get();
+      // ignore: non_constant_identifier_names
+      for (var usr_a in usr_answer.docs) {
+        await usr_a.reference.delete();
+      }
+    }
     return soal.add(data);
   }
 

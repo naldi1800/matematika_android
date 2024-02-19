@@ -9,7 +9,20 @@ class AdminSoalController extends GetxController {
     return soal.snapshots();
   }
 
-  void delete(id) {
+  void delete(id) async {
+    var u = await firestore.collection("users").get();
+    for (var usr in u.docs) {
+      var usrId = usr.id;
+      var usrAnswer = await firestore
+          .collection("users")
+          .doc(usrId)
+          .collection("answers")
+          .get();
+      for (var usra in usrAnswer.docs) {
+        await usra.reference.delete();
+      }
+    }
+
     var soal = firestore.collection('soals').doc(id);
     soal.delete();
     UI.warning(msg: "Berhasil dihapus");

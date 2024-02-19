@@ -9,6 +9,7 @@ class MateriController extends GetxController {
   }
 
   var onLoad = false.obs;
+  RxMap<String, dynamic> sisa = RxMap<String, dynamic>();
   RxList<dynamic> userAnswer = [].obs;
   RxMap<String, dynamic> userLevel = RxMap<String, dynamic>({});
   RxMap<String, dynamic> userSelected = RxMap<String, dynamic>({});
@@ -18,13 +19,22 @@ class MateriController extends GetxController {
     u.get().then((value) => user.value = value.data()!);
     u.collection('answers').get().then(
       (value) {
-        value.docs.forEach((doc) {
-          userAnswer.add(doc.data());
-          userLevel.putIfAbsent(
-              doc.data()['idSoal'], () => doc.data()['isTrue']);
-          userSelected.putIfAbsent(
-              doc.data()['idSoal'], () => doc.data()['answer']);
-        });
+        sisa.value = RxMap<String, dynamic>();
+        ;
+        // var i = 0;
+        if (value.docs.isNotEmpty) {
+          for (var doc in value.docs) {
+            var d = doc.data();
+            userAnswer.add(d);
+            userLevel.putIfAbsent(d['idSoal'], () => d['isTrue']);
+            userSelected.putIfAbsent(d['idSoal'], () => d['answer']);
+            sisa.putIfAbsent(
+              d['idSoal'],
+              () => [3 - d['numberofanswers'], d['isTrue']],
+            );
+            // i++;
+          }
+        }
         onLoad.value = true;
       },
     );

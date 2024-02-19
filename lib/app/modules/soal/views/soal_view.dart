@@ -24,6 +24,7 @@ class SoalView extends GetView<SoalController> {
     var ukuranPensilOld = 4.0.obs;
     var sp = true.obs;
     var erase = false.obs;
+    print(Get.arguments);
     return Scaffold(
       backgroundColor: UI.backgroud,
       body: SafeArea(
@@ -327,32 +328,39 @@ class SoalView extends GetView<SoalController> {
                                     ],
                                   ),
                                   ElevatedButton(
-                                      onPressed: () {
-                                        controller.saveAnswer(
+                                      onPressed: () async {
+                                        int x = await controller.saveAnswer(
                                             controller.answer.value ==
                                                 d['answer']);
                                         // print(controller.answer.value ==
                                         //     d['answer']);
 
-                                        if (controller.answer.value ==
-                                            d['answer']) {
+                                        print(Get.arguments);
+                                        if (x > 2 &&
+                                            controller.answer.value !=
+                                                d['answer']) {
                                           Get.offAndToNamed(Routes.FINISH,
                                               arguments: {
                                                 "id_soal":
                                                     Get.arguments['id_soal'],
                                                 "id_user":
                                                     Get.arguments['id_user'],
-                                                "answer": d['answer'],
+                                                "answer": controller.answer.value,
                                               });
+                                          // UI.warning(
+                                          //     msg:
+                                          //         "Jawaban anda salah, Sisa kesempatan $x");
                                           // to penjelasan
                                         } else {
                                           // print(Get.arguments['id_user']);
                                           // Get.back();
-                                          Get.offAndToNamed(Routes.MATERI, arguments:
+                                          Get.offAndToNamed(Routes.MATERI,
+                                              arguments:
                                                   Get.arguments['id_user']);
                                           // Get.offAndToNamed(Routes.MATERI,
                                           //     arguments:
                                           //         Get.arguments['id_user']);
+                                          // UI.warning(msg: "Jawaban anda benar");
                                         }
                                       },
                                       style: const ButtonStyle(

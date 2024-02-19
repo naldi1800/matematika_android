@@ -13,6 +13,7 @@ class MateriView extends GetView<MateriController> {
   @override
   Widget build(BuildContext context) {
     var layar = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: UI.backgroud,
       body: Stack(
@@ -25,11 +26,6 @@ class MateriView extends GetView<MateriController> {
                     var datas = snapshot.data!.docs;
                     controller.userData();
                     return Obx(() {
-                      // print(controller.userLevel);
-                      // print(controller.userAnswer);
-                      // print(controller.userSelected);
-                      print(controller.userLevel);
-                      //  print(Get.arguments);
                       return Container(
                         width: layar.width,
                         height: layar.height,
@@ -119,143 +115,163 @@ class MateriView extends GetView<MateriController> {
                             Visibility(
                               visible: controller.onLoad.value,
                               child: Expanded(
-                                child: ListView.builder(
-                                  itemCount: datas.length,
-                                  itemBuilder: (context, index) {
-                                    // var d = datas[index].data();
-                                    return Container(
-                                      padding: const EdgeInsets.all(5),
-                                      width: double.infinity,
-                                      height: 65,
-                                      child: ListTile(
-                                        onTap: () {
-                                          if (controller.user.isNotEmpty) {
-                                            if (controller.user['video'] > 1) {
-                                              if (index > 0) {
-                                                controller.userAnswer
-                                                    .forEach((element) {
-                                                  if (datas[index - 1].id ==
-                                                      element['idSoal']) {
-                                                    if (element['isTrue']) {
-                                                      // print(datas[index].id);
-                                                      if (!controller.userLevel
-                                                          .containsKey(
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: layar.height - (layar.height / 3),
+                                  child: ListView.builder(
+                                    itemCount: datas.length,
+                                    itemBuilder: (context, index) {
+                                      // if (controller.sisa.isEmpty) {
+                                      // controller.sisa.value = List.generate(
+                                      //     datas.length,
+                                      //     (index) => [-1, false]);
+                                      // }
+                                      return Container(
+                                        padding: const EdgeInsets.all(5),
+                                        width: double.infinity,
+                                        height: 65,
+                                        child: ListTile(
+                                          trailing: (controller
+                                                      .sisa.isNotEmpty &&
+                                                  controller.sisa.length >
+                                                      index)
+                                              ? Visibility(
+                                                  visible: true,
+                                                  child: Text(
+                                                    (controller.sisa[
+                                                            datas[index].id][1])
+                                                        ? "Benar"
+                                                        : (controller
+                                                                    .sisa[datas[
+                                                                        index]
+                                                                    .id][0] <
+                                                                1
+                                                            ? "Salah"
+                                                            : "Sisa ${controller.sisa[datas[index].id][0]}"),
+                                                    style: TextStyle(
+                                                      color: controller.sisa[
                                                               datas[index]
-                                                                  .id)) {
-                                                        Get.offAndToNamed(
-                                                          Routes.SOAL,
-                                                          arguments: {
-                                                            "id_user":
-                                                                Get.arguments,
-                                                            "id_soal":
-                                                                datas[index].id,
-                                                          },
-                                                        );
-                                                      } else {
+                                                                  .id][1]
+                                                          ? Colors.greenAccent
+                                                          : Colors.redAccent,
+                                                      fontSize: 13,
+                                                    ),
+                                                  ),
+                                                )
+                                              : null,
+                                          onTap: () {
+                                            var id = datas[index].id;
+                                            var arg = {
+                                              "id_user": Get.arguments,
+                                              "id_soal": id,
+                                            };
+
+                                            if (controller.user.isNotEmpty) {
+                                              if (controller.user['video'] >
+                                                  1) {
+                                                // if (controller.sisa[
+                                                //         datas[index].id][0] <
+                                                //     1) {
+                                                //   return;
+                                                // }
+                                                if (index > 0) {
+                                                  for (var element in controller
+                                                      .userAnswer) {
+                                                    if (datas[index - 1].id ==
+                                                        element['idSoal']) {
+                                                      if (element['isTrue'] ||
+                                                          element['numberofanswers'] > 2) {
                                                         if (!controller
-                                                                .userLevel[
-                                                            datas[index].id]) {
+                                                            .userLevel
+                                                            .containsKey(id)) {
                                                           Get.offAndToNamed(
                                                             Routes.SOAL,
-                                                            arguments: {
-                                                              "id_user":
-                                                                  Get.arguments,
-                                                              "id_soal":
-                                                                  datas[index]
-                                                                      .id,
-                                                            },
+                                                            arguments: arg,
                                                           );
                                                         } else {
-                                                          Get.offAndToNamed(
-                                                            Routes.FINISH,
-                                                            arguments: {
-                                                              "id_user":
-                                                                  Get.arguments,
-                                                              "id_soal":
-                                                                  datas[index]
-                                                                      .id,
-                                                              "answer": controller
-                                                                      .userSelected[
-                                                                  datas[index]
-                                                                      .id],
-                                                            },
-                                                          );
+                                                          if (!controller
+                                                                      .userLevel[
+                                                                  id] &&
+                                                              controller.sisa[
+                                                                      id][0] >
+                                                                  0) {
+                                                            Get.offAndToNamed(
+                                                              Routes.SOAL,
+                                                              arguments: arg,
+                                                            );
+                                                          } else {
+                                                            var a = controller
+                                                                .userSelected[id];
+                                                            Get.offAndToNamed(
+                                                              Routes.FINISH,
+                                                              arguments: {
+                                                                ...arg,
+                                                                "answer": a,
+                                                              },
+                                                            );
+                                                          }
                                                         }
+                                                      } else {
+                                                        UI.warning(
+                                                          msg:
+                                                              "Selesaikan soal sebelumnya",
+                                                        );
                                                       }
+                                                    }
+                                                  }
+                                                  if (controller
+                                                      .userAnswer.isEmpty) {
+                                                    UI.warning(
+                                                      msg:
+                                                          "Selesaikan soal sebelumnya",
+                                                    );
+                                                  }
+                                                } else {
+                                                  if (!controller.userLevel
+                                                      .containsKey(id)) {
+                                                    Get.offAndToNamed(
+                                                      Routes.SOAL,
+                                                      arguments: arg,
+                                                    );
+                                                  } else {
+                                                    if (!controller
+                                                        .userLevel[id]) {
+                                                      Get.offAndToNamed(
+                                                        Routes.SOAL,
+                                                        arguments: arg,
+                                                      );
                                                     } else {
-                                                      UI.warning(
-                                                        msg:
-                                                            "Selesaikan soal sebelumnya",
+                                                      Get.offAndToNamed(
+                                                        Routes.FINISH,
+                                                        arguments: {
+                                                          ...arg,
+                                                          "answer": controller
+                                                              .userSelected[id],
+                                                        },
                                                       );
                                                     }
                                                   }
-                                                });
-                                                if (controller
-                                                    .userAnswer.isEmpty) {
-                                                  UI.warning(
-                                                    msg:
-                                                        "Selesaikan soal sebelumnya",
-                                                  );
                                                 }
                                               } else {
-                                                if (!controller.userLevel
-                                                    .containsKey(
-                                                        datas[index].id)) {
-                                                  Get.offAndToNamed(
-                                                    Routes.SOAL,
-                                                    arguments: {
-                                                      "id_user": Get.arguments,
-                                                      "id_soal":
-                                                          datas[index].id,
-                                                    },
-                                                  );
-                                                } else {
-                                                  if (!controller.userLevel[
-                                                      datas[index].id]) {
-                                                    Get.offAndToNamed(
-                                                      Routes.SOAL,
-                                                      arguments: {
-                                                        "id_user":
-                                                            Get.arguments,
-                                                        "id_soal":
-                                                            datas[index].id,
-                                                      },
-                                                    );
-                                                  } else {
-                                                    Get.offAndToNamed(
-                                                      Routes.FINISH,
-                                                      arguments: {
-                                                        "id_user":
-                                                            Get.arguments,
-                                                        "id_soal":
-                                                            datas[index].id,
-                                                        "answer": controller
-                                                                .userSelected[
-                                                            datas[index].id],
-                                                      },
-                                                    );
-                                                  }
-                                                }
+                                                UI.warning(
+                                                  msg:
+                                                      "Anda harus menonton Video 1 dan 2 terlebih dahulu",
+                                                );
                                               }
-                                            } else {
-                                              UI.warning(
-                                                msg:
-                                                    "Anda harus menonton Video 1 dan 2 terlebih dahulu",
-                                              );
                                             }
-                                          }
-                                        },
-                                        tileColor: UI.foreground,
-                                        title: Text(
-                                          "Nomor ${index + 1} ",
-                                          style: const TextStyle(
-                                            color: UI.action,
-                                            fontSize: 15,
+                                          },
+                                          tileColor: UI.foreground,
+                                          title: Text(
+                                            "Nomor ${index + 1} ",
+                                            style: const TextStyle(
+                                              color: UI.action,
+                                              fontSize: 15,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  },
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ),

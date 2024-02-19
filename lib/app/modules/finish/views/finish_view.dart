@@ -86,7 +86,7 @@ class FinishView extends GetView<FinishController> {
                         height: 100,
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         child: Text(
-                          "Jawaban benar adalah (${d['answer']}. ${d[d['answer'].toString().toLowerCase()]}, jawaban anda ${Get.arguments["answer"]})",
+                          "Jawaban benar adalah (${d['answer']}. ${d[d['answer'].toString().toLowerCase()]}, jawaban anda ${Get.arguments["answer"]}",
                           style: TextStyle(
                             color: (Get.arguments["answer"] == d['answer'])
                                 ? UI.action

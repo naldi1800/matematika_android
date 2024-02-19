@@ -26,40 +26,41 @@ class SoalController extends GetxController {
     answer.value = s;
   }
 
-  Future<void> saveAnswer(bool isTrue) async {
-  var answersCollection = firestore
-      .collection('users')
-      .doc(Get.arguments['id_user'])
-      .collection('answers');
+  Future<int> saveAnswer(bool isTrue) async {
+    var answersCollection = firestore
+        .collection('users')
+        .doc(Get.arguments['id_user'])
+        .collection('answers');
 
-  try {
-    var querySnapshot = await answersCollection.get();
+    try {
+      var querySnapshot = await answersCollection.get();
 
-    for (var doc in querySnapshot.docs) {
-      print(doc);
-      if (doc['idSoal'] == Get.arguments['id_soal']) {
-        await answersCollection.doc(doc.id).update({
-          "numberofanswers": (doc['numberofanswers'] + 1),
-          "isTrue": isTrue,
-          "answer": answer.value,
-        });
-        return; // Break out of the loop after updating
+      for (var doc in querySnapshot.docs) {
+        print(doc);
+        if (doc['idSoal'] == Get.arguments['id_soal']) {
+          var number = doc['numberofanswers'] + 1;
+          await answersCollection.doc(doc.id).update({
+            "numberofanswers": number,
+            "isTrue": isTrue,
+            "answer": answer.value,
+          });
+          return number; // Break out of the loop after updating
+        }
       }
+
+      // If the loop completes without finding a matching document
+      await answersCollection.add({
+        "idSoal": Get.arguments['id_soal'],
+        "numberofanswers": 1,
+        "isTrue": isTrue,
+        "answer": answer.value,
+      });
+    } catch (e) {
+      print('Error saving answer: $e');
+      // Handle the error accordingly
     }
-
-    // If the loop completes without finding a matching document
-    await answersCollection.add({
-      "idSoal": Get.arguments['id_soal'],
-      "numberofanswers": 1,
-      "isTrue": isTrue,
-      "answer": answer.value,
-    });
-  } catch (e) {
-    print('Error saving answer: $e');
-    // Handle the error accordingly
+    return 1;
   }
-}
-
 
   // void saveAnswer(isTrue) async {
   //   firestore
